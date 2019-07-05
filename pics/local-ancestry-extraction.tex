@@ -1,0 +1,140 @@
+\begin{center}
+\begin{tikzpicture}[node distance=8mm and 8mm,xscale=1.8,yscale=1.8]
+
+\tikzset{greynode/.style={font=\small,node distance=.5cm and .5 cm,fill=black!10,draw=black!30,inner sep=0pt,minimum size=8mm,shape=circle},
+bluenode/.style={font=\small,node distance=.5cm and .5cm,fill=blue!30,draw=blue!50,inner sep=0pt,minimum size=8mm,shape=circle},
+rednode/.style={font=\small,node distance=.5cm and .5cm,fill=red!30,draw=red!50,inner sep=0pt,minimum size=8mm,shape=circle}}
+
+% Middle sample nodes
+\node (s0) [greynode] {0};
+\node (s2) [right=of s0,greynode] {2};
+\node (s3) [right=of s2,greynode] {3};
+\node (s4) [right=of s3,greynode] {4};
+\node (s1) [right=of s4,greynode] {1};
+\node (s5) [right=of s1,greynode] {5};
+
+% Left sample nodes
+\node (leftTree) at (-6, 0) {};
+\node[greynode] (s0l) at ($(s0) + (leftTree)$) {0};
+\node[greynode] (s1l) at ($(s2) + (leftTree)$) {1};
+\node[greynode] (s2l) at ($(s3) + (leftTree)$) {2};
+\node[greynode] (s3l) at ($(s4) + (leftTree)$) {3};
+\node[greynode] (s4l) at ($(s1) + (leftTree)$) {4};
+\node[greynode] (s5l) at ($(s5) + (leftTree)$) {5};
+
+% Right sample nodes
+\node (rightTree) at (6, 0) {};
+\node [greynode] (s2r) at ($(s0) + (rightTree)$) {2};
+\node [greynode] (s3r) at ($(s2) + (rightTree)$) {3};
+\node [greynode] (s4r) at ($(s3) + (rightTree)$) {4};
+\node [greynode] (s1r) at ($(s4) + (rightTree)$) {1};
+\node [greynode] (s5r) at ($(s1) + (rightTree)$) {5};
+\node [greynode] (s0r) at ($(s5) + (rightTree)$) {0};
+
+% Ancestral nodes
+\node (anc) at (0,2) {};
+\node[bluenode] (s9) at ($0.5*(s0) + 0.5*(s2) + (anc)$) {9};
+\node[bluenode] (s9l) at ($0.5*(s0l) + 0.5*(s2l) + (anc)$) {9};
+\node[bluenode] (s9r) at ($0.5*(s2r) + 0.5*(s4r) + (anc)$) {9};
+\node[rednode] (s10) at ($0.5*(s3)+0.5*(s5) + (anc)$) {10};
+\node[rednode] (s10l) at ($0.5*(s3l)+0.5*(s5l) + (anc)$) {10};
+\node[rednode] (s10r) at ($0.5*(s1r)+0.5*(s0r) + (anc)$) {10};
+
+% Internal nodes
+\node[greynode] (s6l) at ($(s2l)!0.25!(s9l)$) {6};
+\node[greynode] (s7) at ($(s3)!.5!(s10)$) {7};
+\node[greynode] (s7l) at ($(s5l)!.5!(s10l)$) {7};
+\node[greynode] (s7r) at ($(s4r)!.5!(s9r)$) {7};
+\node[greynode] (s8) at ($(s5)!.75!(s10)$) {8};
+\node[greynode] (s8r) at ($(s1r)!.75!(s10r)$) {8};
+
+% Edges
+\draw (s0) -- (s9) -- (s2); \draw (s3) -- (s7) -- (s10) -- (s8) -- (s5); \draw (s4) -- (s7); \draw (s1) -- (s8); % middle tree
+\draw (s0l) -- (s9l) -- (s6l) -- (s2l); \draw (s1l) -- (s6l); \draw ( s3l) -- (s10l) -- (s7l) -- (s5l); \draw (s4l) -- (s7l); % left tree
+\draw (s2r) -- (s9r) -- (s7r) -- (s4r); \draw (s3r) -- (s7r); \draw (s1r) -- (s8r) -- (s10r) -- (s0r); \draw (s5r) -- (s8r); % right tree
+\draw[dashed] (s9) -- +(0,1); \draw[dashed] (s9l) -- +(0,1); \draw[dashed] (s9r) -- +(0,1);
+\draw[dashed] (s10) -- +(0,1); \draw[dashed] (s10l) -- +(0,1); \draw[dashed] (s10r) -- +(0,1);
+
+% Axes
+\node (topAx) at (0,3.5) {};
+\node (topLeft) at ($(s0l) + (topAx) + (-0.5, 0)$) {};
+\node (topRight) at ($(s0r) + (topAx) + (0.5,0)$) {};
+\draw[very thick] (topLeft.center) -- (topRight.center);
+\node (genunit) at ($0.3333*(topRight) - 0.3333*(topLeft)$) {};
+\foreach \x in {0,1,2,3} \draw ($(topLeft) + \x*(genunit)$) -- +(0,.2);
+\foreach \x in {0,1,2,3} \node at ($(topLeft) + \x*(genunit) + (0,.4)$) {\small\x};
+
+% Interval endpoints
+\foreach \x in {0,1,2,3} \draw[thin,color=black!50,dashed] ($(topLeft) + \x*(genunit)$) -- +(0, -9);
+%\draw[thin,color=black!50,dashed] ($(topLeft) + 7*(genUnit)$) -- +(0, -5.5);
+
+% Axis titles
+\node (topLabel) at ($(topLeft) + 1.5*(genunit) + (0,1)$) {\small$\textrm{Chromosomal coordinates}$};
+
+%%%%%
+\node (after) at (0, -5) {};
+
+% Middle sample nodes
+\node[greynode] (s0) at (after) {0};
+\node (s2) [right=of s0,greynode] {2};
+\node (s3) [right=of s2,greynode] {3};
+\node (s4) [right=of s3,greynode] {4};
+\node (s1) [right=of s4,greynode] {1};
+\node (s5) [right=of s1,greynode] {5};
+
+% Left sample nodes
+\node (leftTree) at (-6, 0) {};
+\node[greynode] (s0l) at ($(s0) + (leftTree)$) {0};
+\node[greynode] (s1l) at ($(s2) + (leftTree)$) {1};
+\node[greynode] (s2l) at ($(s3) + (leftTree)$) {2};
+\node[greynode] (s3l) at ($(s4) + (leftTree)$) {3};
+\node[greynode] (s4l) at ($(s1) + (leftTree)$) {4};
+\node[greynode] (s5l) at ($(s5) + (leftTree)$) {5};
+
+% Right sample nodes
+\node (rightTree) at (6, 0) {};
+\node [greynode] (s2r) at ($(s0) + (rightTree)$) {2};
+\node [greynode] (s3r) at ($(s2) + (rightTree)$) {3};
+\node [greynode] (s4r) at ($(s3) + (rightTree)$) {4};
+\node [greynode] (s1r) at ($(s4) + (rightTree)$) {1};
+\node [greynode] (s5r) at ($(s1) + (rightTree)$) {5};
+\node [greynode] (s0r) at ($(s5) + (rightTree)$) {0};
+
+% Ancestral nodes
+\node (anc) at (0,2) {};
+\node[bluenode] (s9) at ($0.5*(s0) + 0.5*(s2) + (anc)$) {9};
+\node[bluenode] (s9l) at ($0.5*(s0l) + 0.5*(s2l) + (anc)$) {9};
+\node[bluenode] (s9r) at ($0.5*(s2r) + 0.5*(s4r) + (anc)$) {9};
+\node[rednode] (s10) at ($0.5*(s3)+0.5*(s5) + (anc)$) {10};
+\node[rednode] (s10l) at ($0.5*(s3l)+0.5*(s5l) + (anc)$) {10};
+\node[rednode] (s10r) at ($0.5*(s1r)+0.5*(s0r) + (anc)$) {10};
+
+%% Axes
+%\node (topAx) at (0,3.5) {};
+%\node (topLeft) at ($(s0l) + (topAx) + (-0.5, 0)$) {};
+%\node (topRight) at ($(s0r) + (topAx) + (0.5,0)$) {};
+%\draw[very thick] (topLeft.center) -- (topRight.center);
+%\node (genunit) at ($0.3333*(topRight) - 0.3333*(topLeft)$) {};
+%\foreach \x in {0,1,2,3} \draw ($(topLeft) + \x*(genunit)$) -- +(0,.2);
+%\foreach \x in {0,1,2,3} \node at ($(topLeft) + \x*(genunit) + (0,.4)$) {\x};
+
+% Edges
+\draw (s0) -- (s9) -- (s2); \draw (s3) -- (s10) -- (s4); \draw (s1) -- (s10) --  (s5); % middle tree
+\draw (s0l) -- (s9l) -- (s2l); \draw (s1l) -- (s9l); \draw (s3l) -- (s10l) -- (s5l); \draw (s4l) -- (s10l); % left tree
+\draw (s2r) -- (s9r) -- (s3r); \draw (s4r) -- (s9r); \draw (s1r) -- (s10r) -- (s5r); \draw (s0r) -- (s10r);
+
+\draw[dashed] (s9) -- +(0,1); \draw[dashed] (s9l) -- +(0,1); \draw[dashed] (s9r) -- +(0,1);
+\draw[dashed] (s10) -- +(0,1); \draw[dashed] (s10l) -- +(0,1); \draw[dashed] (s10r) -- +(0,1);
+
+% Interval endpoints
+\foreach \x in {0,1,2,3} \draw[thin,color=black!50,dashed] ($(topLeft) + \x*(genunit)$) -- +(0, -4);
+%\draw[thin,color=black!50,dashed] ($(topLeft) + 7*(genUnit)$) -- +(0, -5.5);
+
+%% Axis titles
+%\node (topLabel) at ($(topLeft) + 1.5*(genunit) + (0,1)$) {$\textrm{Chromosomal coordinates}$};
+
+%% Arrows
+\foreach \x in {0, 1, 2} \draw[<-,very thick] ($(topLeft) + \x*(genunit) + 0.5*(genunit) + (0,-5.5)$) -- +(0, 1);
+
+\end{tikzpicture}
+\end{center} 

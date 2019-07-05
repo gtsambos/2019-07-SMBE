@@ -1,0 +1,25 @@
+
+
+\begin{tikzpicture}[node distance=12mm and 12mm, xscale=3, yscale=2]
+
+\tikzset{greynode/.style={font=\large,node distance=2cm and 2cm,fill=black!10,draw=black!30,inner sep=0pt,minimum size=12mm,shape=circle},
+rednode/.style={font=\large,node distance=2cm and 2cm,fill=red!30,draw=red!50,inner sep=0pt,minimum size=12mm,shape=circle},
+bluenode/.style={font=\large,node distance=2cm and 2cm,fill=blue!30,draw=blue!50,inner sep=0pt,minimum size=12mm,shape=circle}}
+
+% Sample nodes
+\node[greynode] (s1) at (0,0) {1};
+\node (s2) [greynode,right of=s1] {2};
+\node (s3) [greynode,right of=s2] {3};
+\node (s4) [greynode,right of=s3] {4};
+
+% Ancestral nodes
+\node[greynode] (s5) at ($0.5*(s3)+0.5*(s4)+ (0,1)$) {5};
+\node[greynode] (s6) at ($0.5*(s2) + 0.5*(s5) + (0,1.5)$) {6};
+\node[rednode] (s7) at ($(s1) + (0,2.5)$) {7};
+\node[bluenode] (s8) at ($(s6) + (0,1)$) {8};
+\node[greynode] (s9) at ($0.5*(s7) + 0.5*(s8) + (0,1)$) {9};
+
+% Edges
+\draw (s5) -- (s3); \draw (s5) -- (s4); \draw (s6) -- (s2); \draw (s6) -- (s5); \draw (s7) -- (s1); \draw (s8) -- (s6); \draw (s9) -- (s7); \draw (s9) -- (s8);
+
+\end{tikzpicture} 

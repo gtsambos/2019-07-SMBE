@@ -1,0 +1,42 @@
+
+\begin{tikzpicture}[node distance=2mm and 2mm,xscale=1,yscale=.9,font=\tiny]
+
+\tikzset{greynode/.style={font=\footnotesize,node distance=1cm and 1 cm,fill=black!10,draw=black!30,inner sep=0pt,minimum size=3mm,shape=circle},
+rednode/.style={font=\footnotesize,node distance=1cm and 1 cm,fill=red!30,draw=red!50,inner sep=0pt,minimum size=3mm,shape=circle},
+bluenode/.style={font=\footnotesize,node distance=1cm and 1 cm,fill=blue!30,draw=blue!50,inner sep=0pt,minimum size=3mm,shape=circle},
+purplenode/.style={font=\footnotesize,node distance=1cm and 1cm,fill=purple!30,draw=purple!50,inner sep=0pt,minimum size=3mm,shape=circle},
+whitenode/.style={font=\footnotesize,node distance=1cm and 1cm,fill=white,draw=white,inner sep=0pt,minimum size=3.3mm,shape=circle}}
+
+% Axis
+\node (leftAx) at (-6,0) {};
+\draw[very thick] (-6,0) -- +(0, 10);
+\foreach \y in {0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10} \draw ($(leftAx) + (-0.1, \y)$) -- ($(leftAx) + (0.1, \y)$); % tick marks
+\node[rotate=90,anchor=south] (leftLabel) at ($(leftAx) + (-0.3,5)$) {$\footnotesize\textrm{Time}$};
+
+% Important times
+\draw[gray,densely dashed] ($(leftAx) + (0,4)$) -- +(16, 0);
+
+% Sample nodes
+\node(s1) [purplenode] at (0,0) {};
+\node (s2) [purplenode,right of=s1] {};
+\node (s3) [purplenode,right of=s2] {};
+\node (s4) [purplenode,right of=s3] {};
+
+% Ancestral nodes
+\node (pop1) at (-5, 4) {};
+\node (pop2) at (5, 4) {};
+\foreach \x in {1,2,3,4} \node[bluenode] (b\x) at ($(pop1) + (s\x)$) {};
+\foreach \x in {1,2,3,4} \node[rednode] (r\x) at ($(pop2) + (s\x)$) {};
+
+% Population labels
+\node at ($0.5*(s2) + 0.5*(s3) + (0,-0.5)$) {$\tiny\textrm{Admixed population}$};
+\node at ($(pop1) + 0.5*(s2) + 0.5*(s3) + (0,+0.5)$) {$\tiny\textrm{Blue ancestors}$};
+\node at ($(pop2) + 0.5*(s2) + 0.5*(s3) + (0,+0.5)$) {$\tiny\textrm{Red ancestors}$};
+
+% Cover the bottom bit
+\foreach \x in {1,2,3,4} \node[whitenode] at (s\x) {};
+
+% Time of admixture
+\node[anchor=south,color=gray] at ($0.5*(b4) + 0.5*(r1)$) {{\tiny Start of admixture}};
+
+\end{tikzpicture} 
