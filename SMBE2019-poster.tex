@@ -5,15 +5,25 @@
 \usepackage{tabularx,booktabs,adjustbox} % For tables
 \usetikzlibrary{calc,fit,arrows,decorations.pathmorphing,backgrounds,fit,positioning}
 \usetikzlibrary{shapes.symbols}
+%\usepackage{ding}
 
 % tikz colour settings
 \tikzset{pop1/.style={blue!40},pop2/.style={red!40}}
+
+\definecolorpalette{myColorPalette} {
+\definecolor{colorOne}{named}{teal}
+\definecolor{colorTwo}{named}{white}
+\definecolor{colorThree}{named}{cyan}
+}
 
  \tikzposterlatexaffectionproofon %shows small comment on how the poster was made at bottom of poster
 
  % Commands
  \newcommand{\bs}{\textbackslash}   % backslash
  \newcommand{\cmd}[1]{{\bf \color{red}#1}}   % highlights command
+ \newcommand{\magenta}[1]{\textcolor{magenta}{#1}}
+ \newcommand{\teal}[1]{\textcolor{teal}{#1}}
+% \newcommand{\crossmark}{\ding{55}}
 
  % Title, Author, Institute
  \title{Efficient simulation of introgression, admixture and local ancestry}
@@ -23,33 +33,56 @@
  % -- PREDEFINED THEMES ---------------------- %
  % Choose LAYOUT:  Default, Basic, Rays, Simple, Envelope, Wave, Board, Autumn, Desert,
  \usetheme{Autumn}
-\usecolorstyle[colorPalette=BlueGrayOrange]{Denmark}
+\usecolorstyle[colorPalette=myColorPalette]{Denmark}
 
 
  \begin{document}
 
      \maketitle
+\block[bodyverticalshift=-2cm]{}{
+   {\Large
+   Georgia Tsambos* (1, 2), Peter Ralph (3), Jerome Kelleher (4), Stephen Leslie (1, 2, 5), Damjan Vukcevic (1, 2).
+(1) School of Mathematics and Statistics, University of Melbourne, Australia (2) Melbourne Integrative Genomics, University of Melbourne, Australia, (3) Department of Mathematics, University of Oregon, United States, (4) Big Data Institute, University of Oxford, United Kingdom, (5) School of Biosciences, University of Melbourne, Australia.\\[7mm]
+Presenting author: gtsambos (at) student.unimelb.edu.au
+}
+}
    
    %%% BLOCK 0  
- \block[bodyverticalshift=-1cm]{0. Introduction}{
-%\input{pics/admixed-family-tree.tex} 
-%here is some text
+ \block[titleoffsety=2cm,bodyverticalshift=-20cm]{0. Introduction}{
  }
  \begin{columns}
  \begin{subcolumns}
-   \subcolumn{20} \block[bodyoffsetx=1cm]{}{Some text about my favourite thing }
-   \subcolumn{4}  \block{}{ \input{pics/admixed-family-tree.tex}}
+   \subcolumn{23} \block[bodyoffsetx=1.5cm,bodyverticalshift=-6cm]{}{
+To assess the performance of methods in population genetics, we often wish to simulate realistic genetic datasets while retaining detailed information about the history of the simulated genomes.
+This poster briefly describes how we can efficiently simulate genetic information while also keeping information about the ancestral population that particular genomic segments have been inherited from, i.e. the \magenta{local ancestry} of the sample. In all pictures here, we represent ancestries with colours.\\[3mm]
+\teal{Section 1} introduces the \magenta{tree sequence} [1], a data structure that is capable of encoding of a complete genealogy for a sample of chromosomes at each chromosomal location.
+\teal{Section 2} shows how local ancestry information can be stored and extracted from tree sequences.
+\teal{Section 3} outlines a method for simulating such information using recent advances implemented in the tree sequence simulation software msprime [1] and SLiM [2].
+\teal{Section 4} demonstrates the performance of this method.
+\teal{Section 5} provides further information for the interested viewer.
+%Many existing methods can infer the ancestral origin of chromosomal segments.
+%However, it is difficult to simulate chromosomes for which the true origin of those segments is known; existing approaches are approximate and ad-hoc. Recent advances implemented in the software msprime (Kelleher et al. 2016) and SLiM (Haller et al. 2018) allow us to efficiently record genetic information using a succinct tree sequence data structure, which provides unprecedented detail about the genealogy of the sample
+    }
+   \subcolumn{3}  \block[bodyoffsetx=-2cm,bodyverticalshift=-6cm]{}{ \input{pics/admixed-family-tree.tex}}
  \end{subcolumns}
  \end{columns}
 
 %%% BLOCK 1
      \begin{columns}%blocks will be placed into columns
          \column{.5}
-         \block[roundedcorners=40,titleoffsety=-12cm,bodyoffsety=-12cm]{1. Tree sequences}{
-		\input{pics/what-are-tree-sequences.tex}         
+         \block[roundedcorners=40,titleoffsety=-7cm,bodyoffsety=-7cm,bodyverticalshift=-1cm]{1. Tree sequences}{\begin{center}
+         \input{pics/what-are-tree-sequences.tex}
+         \end{center}
+		
+\vspace{5mm}		
+A \magenta{tree sequence} [1] consists of nodes, which represent the alleles held by different chromosomes in the history of the sample, and edges, which represent genealogical relationships between the alleles.
+By adding information about mutations we can also use them to encode full haplotype data for each samples.    
+The \texttt{tskit} package encodes tree sequences as a compact set of tables that can be efficiently created, queried and modified.
+See [1, 2, 3] for more information.
      }
      
-     \block[bodyverticalshift=0cm]{3. Method outline}{} 
+     %%%% BLOCK 3
+     \block[bodyoffsety=4cm]{3. Method outline}{} 
   \begin{subcolumns}
   \subcolumn{.48}
   \block{}{
@@ -69,31 +102,76 @@
 
      \column{.5}
      %%% BLOCK 2
-         \block[bodyverticalshift=0cm,titleoffsety=-12cm,bodyoffsety=-12cm]{2. Local ancestry in tree sequences}{}  
-          \begin{subcolumns}       
-         \subcolumn{.45}
+         \block[titleoffsety=-7cm,bodyoffsety=-3cm]{2. Local ancestry in tree sequences}{}  
+%          \begin{subcolumns}       
+%         \subcolumn{.45}
           \block{}{
-          This is real hard. See why below:
-          
+          \begin{center}
           \input{pics/local-ancestry-extraction.tex}
+          \end{center}
+          By assigning population labels to the nodes that correspond to ancestors of the sample, tree sequences can store the sample's local ancestry. 
+          The branch joining a sample node to an ancestral node shows its ancestry.
+          Extracting this information efficiently is challenging due to correlations in genealogical structure between samples, and across chromosomes; 
+          in an upcoming paper, we will describe an algorithm that enables us to do this.
           }           
-         \end{subcolumns}
-         
-
- 
-         
+       
 \vspace{20cm}
 
-%         \begin{subcolumns}
-%             \subcolumn{.45}
-             \block{4. Method performance}{If you want to have an additional subdivision of columns inside a column, you may use the\\ \texttt{\bs subcolumns} environment inside of a column environment.  The functionality is similar to that of columns, but now the widths are relative to the width of the current column.}
+             \block[titleoffsety=-2.6cm,bodyoffsety=-2.6cm]{4. Method performance}{
+             \begin{center}
+%\large
+\centering
+\setlength{\aboverulesep}{5pt}
+\setlength{\belowrulesep}{5pt}
+\begin{tabularx}{.4\textwidth}{p{6cm}p{7cm}p{6cm}p{7cm}X}
+\toprule
+%& \multicolumn{3}{c}{{\bf Global ancestry}} \\[1mm]
+ & Missing data & Run time &  File size & Selection \\
+\midrule 
+{\bf \texttt{msprime}} & $4.0$\% & 6 sec & 9 Mb & No \\ \addlinespace
+{\bf \texttt{msprime}} +~full~ARG & $0.0$\% & 53 sec & 1700 Mb  & No\\ \addlinespace
+%{\bf + migration records} & $0.0$\% &  & & \crossmark \\ 
+%\midrule
+%{\bf \texttt{SLiM}} & $4.0$\% & 10 min & 16 Mb  & \checkmark \\ \addlinespace
+{\bf \texttt{SLiM}}& {$0.0$\%} & $>1$ hr  &  41 Mb & {Yes} \\ \addlinespace
+%\midrule
+{\bf\magenta{\texttt{slime}}} & \magenta{$0.0$\%} & \magenta{86 sec} & \magenta{39 Mb}  & \magenta{Yes} \\ \addlinespace
+\bottomrule\\
+\end{tabularx}
+\end{center}
+To illustrate the power of our method, \texttt{slime} [3], we simulated a toy demographic scenario inspired by the history of Neanderthal introgression into the Eurasian population.
+We simulated 200 chromosomes of length $50\thinspace$Mb from 100 present-day Eurasian individuals, assuming a 2\% introgression of Neanderthals into Eurasians 2500 generations ago.
+For simplicity, we assumed a constant effective population sizes of 5000 individuals, a uniform recombination rate of $1 \times  10^{-8}$ bp per generation, a uniform mutation rate of $1 \times  10^{-8}$  bp per generation and neutral variation.  
+(However, note that all of these methods can deal with more complexity than this.)      
+}
 
      \end{columns}
-     
- \block[titleoffsety=-20cm,bodyoffsety=-20cm]{5. Acknowledgements and references}{
-blah 	
+
+%%% BLOCK 5
+ \block[titleoffsety=-9cm,bodyoffsety=-9cm]{5. Acknowledgements, references and further information}{
  }
-           
+  \begin{columns}
+ \begin{subcolumns}
+    \subcolumn{25} \block[bodyoffsetx=1.5cm,bodyverticalshift=-5cm]{}{
+     GT is funded by the Helen Freeman scholarship, the Maurice Belz Fund and the Australian Government's Research Training Scheme. \\[1mm]
+     [1] Kelleher, J., et al. (2016). Efficient Coalescent Simulation and Genealogical Analysis for Large Sample Sizes. PLOS Computational Biology, 12(5).\\[1mm]
+     [2] Galloway, J.,  et al. (2018). Tree-sequence recording in SLiM opens new horizons for forward-time simulation of whole genomes. Molecular Ecology Resources, (November 2018), 552–566.\\[1mm]    
+     [3] [Link to public \texttt{slime} page]
+     }
+       \subcolumn{3} \block[bodyoffsetx=-3cm,bodyverticalshift=-7.5cm]{}{
+       \begin{center}
+       \includegraphics[scale=.6]{pics/2019-07-SMBE-QRcode.png}\\[-7mm]
+      More info
+      \end{center}
+       }
+        \subcolumn{3} \block[bodyoffsetx=-5cm,bodyverticalshift=-7cm]{}{
+       \begin{center}
+       \includegraphics[scale=.3]{pics/Georgia_headshot.png}\\   
+       Come say hi!
+       \end{center}
+       }
+ \end{subcolumns}
+ \end{columns}         
 
  \end{document}
 
