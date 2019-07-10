@@ -1,7 +1,7 @@
 \begin{tikzpicture}[node distance=20mm and 10mm,yscale=1.56,xscale=2,font=\scriptsize]
 
-\tikzset{greynode/.style={font=\footnotesize,node distance=4cm and 2cm,fill=black!10,draw=black!30,inner sep=0pt,minimum size=8mm,shape=circle},
-mutations/.style={shape=starburst,fill=red!50!blue,inner sep=0.6pt,starburst points=11,starburst point height=.5cm}}
+\tikzset{greynode/.style={font=\small,node distance=4cm and 2cm,fill=black!10,draw=black!30,inner sep=0pt,minimum size=8mm,shape=circle},
+mutations/.style={shape=starburst,fill=red!50!blue,inner sep=1.5pt,starburst points=11,starburst point height=.5cm}}
 
 % Middle sample nodes
 \node (s1) [greynode] {0};
@@ -68,9 +68,9 @@ mutations/.style={shape=starburst,fill=red!50!blue,inner sep=0.6pt,starburst poi
 \node[rotate=90,anchor=south] (leftLabel) at ($(leftAx) + (-0.3,2.5)$) {\footnotesize$\textrm{Time}$};
 
 % Haplotypes
-\node[font=\footnotesize] (hap1) at ($(topLeft) + (0,5)$) {\footnotesize$\textrm{Sample 0}$};
-\node[font=\footnotesize] (hap2) at ($(topLeft) + (0,4)$) {\footnotesize$\textrm{Sample 1}$};
-\node[font=\footnotesize] (hap3) at ($(topLeft) + (0,3)$) {\footnotesize$\textrm{Sample 2}$};
+\node[font=\footnotesize] (hap1) at ($(topLeft) + (0,3.5)$) {\footnotesize$\textrm{Sample 0}$};
+\node[font=\footnotesize] (hap2) at ($(topLeft) + (0,3)$) {\footnotesize$\textrm{Sample 1}$};
+\node[font=\footnotesize] (hap3) at ($(topLeft) + (0,2.5)$) {\footnotesize$\textrm{Sample 2}$};
 \node[font=\footnotesize] (hap4) at ($(topLeft) + (0,2)$) {\footnotesize$\textrm{Sample 3}$};
 
 \foreach \x in {1.2, 2.5, 3.3, 3.9, 6.4, 8.4}  \node[mutations] () at ($(topLeft) + \x*(genUnit) + (0,.2)$) {};

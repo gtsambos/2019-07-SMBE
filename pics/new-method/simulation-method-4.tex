@@ -52,9 +52,9 @@ mutations/.style={shape=starburst,fill=red!50!blue,inner sep=0.8pt,starburst poi
 \draw (s3) -- (u31.center) -- (u22.center) -- (u13.center) -- (b2);
 \draw (u32.center) -- (u43.center);
 
-% Mutations
-\node[mutations] at ($(u11)!.5!(u32)$) {};
-\node[mutations] at ($(u13)!.7!(u22)$) {};
+%% Mutations
+%\node[mutations] at ($(u11)!.5!(u32)$) {};
+%\node[mutations] at ($(u13)!.7!(u22)$) {};
 
 % msprime nodes
 \node[bluenode] (b5) at ($0.5*(b2)+0.5*(b3)+(0,1.8)$) {}; 
@@ -69,5 +69,8 @@ mutations/.style={shape=starburst,fill=red!50!blue,inner sep=0.8pt,starburst poi
 
 % Time of admixture
 \node[anchor=south,color=gray] at ($0.5*(b4) + 0.5*(r1)$) {{\tiny Start of admixture}};
+
+% Step
+\node at  ($0.5*(s2) + 0.5*(s3) + (0,9.5)$) {\small\gray{5. Simulate divergence with msprime.}};
 
 \end{tikzpicture} 

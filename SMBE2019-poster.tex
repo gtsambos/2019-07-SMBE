@@ -5,7 +5,29 @@
 \usepackage{tabularx,booktabs,adjustbox} % For tables
 \usetikzlibrary{calc,fit,arrows,decorations.pathmorphing,backgrounds,fit,positioning}
 \usetikzlibrary{shapes.symbols}
-%\usepackage{ding}
+
+\usepackage{color,colortbl}
+\definecolor{Cblack}{rgb}{0,0,0}
+\definecolor{Corange}{rgb}{0.9,0.6,0}
+\definecolor{Cskyblue}{rgb}{0.35,0.7,0.9}
+\definecolor{Cbluegreen}{rgb}{0,0.6,0.5}
+\definecolor{Cyellow}{rgb}{0.95,0.9,0.25}
+\definecolor{Cblue}{rgb}{0,0.45,0.7}
+\definecolor{Cvermillion}{rgb}{0.8,0.4,0}
+\definecolor{Cpurple}{rgb}{0.8,0.6,0.7}
+
+\newcommand{\Cblack}[1]{\textcolor{Cblack}{#1}}
+\newcommand{\Corange}[1]{\textcolor{Corange}{#1}}
+\newcommand{\Cskyblue}[1]{\textcolor{Cskyblue}{#1}}
+\newcommand{\Cbluegreen}[1]{\textcolor{Cbluegreen}{#1}}
+\newcommand{\Cyellow}[1]{\textcolor{Cyellow}{#1}}
+\newcommand{\Cblue}[1]{\textcolor{Cblue}{#1}}
+\newcommand{\Cvermillion}[1]{\textcolor{Cvermillion}{#1}}
+\newcommand{\Cpurple}[1]{\textcolor{Cpurple}{#1}}
+
+ \newcommand{\magenta}[1]{\textcolor{magenta}{#1}}
+ \newcommand{\teal}[1]{\textcolor{teal}{#1}}
+  \newcommand{\gray}[1]{\textcolor{gray}{#1}}
 
 % tikz colour settings
 \tikzset{pop1/.style={blue!40},pop2/.style={red!40}}
@@ -21,8 +43,6 @@
  % Commands
  \newcommand{\bs}{\textbackslash}   % backslash
  \newcommand{\cmd}[1]{{\bf \color{red}#1}}   % highlights command
- \newcommand{\magenta}[1]{\textcolor{magenta}{#1}}
- \newcommand{\teal}[1]{\textcolor{teal}{#1}}
 % \newcommand{\crossmark}{\ding{55}}
 
  % Title, Author, Institute
@@ -41,20 +61,20 @@
      \maketitle
 \block[bodyverticalshift=-2cm]{}{
    {\Large
-   Georgia Tsambos* (1, 2), Peter Ralph (3), Jerome Kelleher (4), Stephen Leslie (1, 2, 5), Damjan Vukcevic (1, 2).
+ Georgia Tsambos (1, 2), Peter Ralph (3), Jerome Kelleher (4), Stephen Leslie (1, 2, 5), Damjan Vukcevic (1, 2).
 (1) School of Mathematics and Statistics, University of Melbourne, Australia (2) Melbourne Integrative Genomics, University of Melbourne, Australia, (3) Department of Mathematics, University of Oregon, United States, (4) Big Data Institute, University of Oxford, United Kingdom, (5) School of Biosciences, University of Melbourne, Australia.\\[7mm]
 Presenting author: gtsambos (at) student.unimelb.edu.au
 }
 }
    
    %%% BLOCK 0  
- \block[titleoffsety=2cm,bodyverticalshift=-20cm]{0. Introduction}{
+ \block[titleoffsety=1cm,bodyverticalshift=-20cm]{0. Introduction}{
  }
  \begin{columns}
  \begin{subcolumns}
-   \subcolumn{23} \block[bodyoffsetx=1.5cm,bodyverticalshift=-6cm]{}{
+   \subcolumn{23} \block[bodyoffsetx=1.5cm,bodyverticalshift=-5cm]{}{
 To assess the performance of methods in population genetics, we often wish to simulate realistic genetic datasets while retaining detailed information about the history of the simulated genomes.
-This poster briefly describes how we can efficiently simulate genetic information while also keeping information about the ancestral population that particular genomic segments have been inherited from, i.e. the \magenta{local ancestry} of the sample. In all pictures here, we represent ancestries with colours.\\[3mm]
+This poster briefly describes how we can efficiently simulate genetic information while also keeping information about the ancestral population that particular genomic segments have been inherited from, often called the \magenta{local ancestry} of the sample. In all pictures here, we represent ancestries with colours.\\[3mm]
 \teal{Section 1} introduces the \magenta{tree sequence} [1], a data structure that is capable of encoding of a complete genealogy for a sample of chromosomes at each chromosomal location.
 \teal{Section 2} shows how local ancestry information can be stored and extracted from tree sequences.
 \teal{Section 3} outlines a method for simulating such information using recent advances implemented in the tree sequence simulation software msprime [1] and SLiM [2].
@@ -70,19 +90,41 @@ This poster briefly describes how we can efficiently simulate genetic informatio
 %%% BLOCK 1
      \begin{columns}%blocks will be placed into columns
          \column{.5}
-         \block[roundedcorners=40,titleoffsety=-7cm,bodyoffsety=-7cm,bodyverticalshift=-1cm]{1. Tree sequences}{\begin{center}
-         \input{pics/what-are-tree-sequences.tex}
-         \end{center}
-		
-\vspace{5mm}		
-A \magenta{tree sequence} [1] consists of nodes, which represent the alleles held by different chromosomes in the history of the sample, and edges, which represent genealogical relationships between the alleles.
-By adding information about mutations we can also use them to encode full haplotype data for each samples.    
-The \texttt{tskit} package encodes tree sequences as a compact set of tables that can be efficiently created, queried and modified.
-See [1, 2, 3] for more information.
+         \block[roundedcorners=40,titleoffsety=-8cm,bodyoffsety=-8cm,bodyverticalshift=-1cm]{1. Tree sequences}{
+Genetic sequence data is BIG and REPETITIVE:\\[2mm]
+
+\begin{center}
+{\tt
+%\ldots GTAACGCGATAAGA\Cvermillion{G}ATTAGCCCAAAAACACAGACATGG\Cvermillion{A}AATAGCGTA\ldots \\
+%\ldots GTAACGCGATAAGA\Cvermillion{G}ATTAGCCCAAAAACACAGACATGG\Cvermillion{A}AATAGCGTA\ldots \\
+\ldots GTAACGCGATAAGA\Cvermillion{G}ATTAGCCCAAAAACACAGACATGG\Cvermillion{A}AATAGCGTA\ldots \\
+\ldots GTAACGCGATAAGA\Cvermillion{G}ATTAGCCCAAAAACACAGACATGG\Cvermillion{A}AATAGCGTA\ldots \\
+\ldots GTAACGCGATAAGA\Cskyblue{T}ATTAGCCCAAAAACACAGACATGG\Cvermillion{A}AATAGCGTA\ldots \\
+\ldots GTAACGCGATAAGA\Cskyblue{T}ATTAGCCCAAAAACACAGACATGG\Cvermillion{A}AATAGCGTA\ldots \\
+\ldots GTAACGCGATAAGA\Cskyblue{T}ATTAGCCCAAAAACACAGACATGG\Cvermillion{A}AATAGCGTA\ldots \\
+\ldots GTAACGCGATAAGA\Cskyblue{T}ATTAGCCCAAAAACACAGACATGG\Cskyblue{T}AATAGCGTA\ldots \\
+%\ldots GTAACGCGATAAGA\Cskyblue{T}ATTAGCCCAAAAACACAGACATGG\Cskyblue{T}AATAGCGTA\ldots \\
+%\ldots GTAACGCGATAAGA\Cskyblue{T}ATTAGCCCAAAAACACAGACATGG\Cskyblue{T}AATAGCGTA\ldots \\
+\ldots GTAACGCGATAAGA\Cskyblue{T}ATTAGCCCAAAAACACAGACATGG\Cskyblue{T}AATAGCGTA\ldots \\[1mm]
+}
+\gray{\small $\leftarrow 5\times 10^7$ bases for small human chromosome $\rightarrow$}\\[4mm]
+\end{center}
+%Because of this, you are probably used to storing your data in a compressed format, and decompressing it only when you need to perform analyses or query the data. Doing this can be time-consuming and computationally expensive, however.
+%Storing $n = 1\times 10^5$ chromosomes in a compressed VCF requires $\approx$ 50 GB.
+However, common haplotypes in a sample are often simply a consequence of some common history. So if we know this history (as we always do in simulations!), storing it directly is often more convenient and efficient than storing the raw haplotypes. This is the key idea behind the \magenta{tree sequence} data structure [1], which encodes a complete genealogy for a sample of chromosomes at each chromosomal location. Tree sequences offer a few benefits to population geneticists compared with traditional sequence-based file formats:
+
+\begin{itemize}
+\item They can store large simulated datasets extremely compactly.
+
+\item As they hold rich detail about the history of the sample, many important processes can be observed directly from the tree structure.
+
+\item They can be queried and modified extremely quickly.
+\end{itemize}
      }
      
      %%%% BLOCK 3
-     \block[bodyoffsety=4cm]{3. Method outline}{} 
+     \block[titleoffsety=1cm,bodyoffsety=4cm]{3. Method outline}{
+     } 
   \begin{subcolumns}
   \subcolumn{.48}
   \block{}{
@@ -102,7 +144,7 @@ See [1, 2, 3] for more information.
 
      \column{.5}
      %%% BLOCK 2
-         \block[titleoffsety=-7cm,bodyoffsety=-3cm]{2. Local ancestry in tree sequences}{}  
+         \block[titleoffsety=-8cm,bodyoffsety=-3.5cm]{2. Local ancestry in tree sequences}{}  
 %          \begin{subcolumns}       
 %         \subcolumn{.45}
           \block{}{
@@ -117,7 +159,7 @@ See [1, 2, 3] for more information.
        
 \vspace{20cm}
 
-             \block[titleoffsety=-2.6cm,bodyoffsety=-2.6cm]{4. Method performance}{
+             \block[titleoffsety=-2.5cm,bodyoffsety=-2.5cm]{4. Method performance}{
              \begin{center}
 %\large
 \centering
@@ -142,13 +184,17 @@ See [1, 2, 3] for more information.
 To illustrate the power of our method, \texttt{slime} [3], we simulated a toy demographic scenario inspired by the history of Neanderthal introgression into the Eurasian population.
 We simulated 200 chromosomes of length $50\thinspace$Mb from 100 present-day Eurasian individuals, assuming a 2\% introgression of Neanderthals into Eurasians 2500 generations ago.
 For simplicity, we assumed a constant effective population sizes of 5000 individuals, a uniform recombination rate of $1 \times  10^{-8}$ bp per generation, a uniform mutation rate of $1 \times  10^{-8}$  bp per generation and neutral variation.  
-(However, note that all of these methods can deal with more complexity than this.)      
+However, note that all of these methods can deal with more complexity than this.
+In particular, both \texttt{slime} and \texttt{SLiM} are capable of simulating under selection.\\
+
+Although still under development, \texttt{slime} appears to outperform existing tree sequence simulation softwares on various metrics by orders of magnitude.
+As a principled fusion of \texttt{SLiM} and \texttt{msprime}, \texttt{slime} will allow users to track local ancestry in large simulations under realistically complex demographic scenarios, and with minimal computational overhead.
 }
 
      \end{columns}
 
 %%% BLOCK 5
- \block[titleoffsety=-9cm,bodyoffsety=-9cm]{5. Acknowledgements, references and further information}{
+ \block[titleoffsety=-3cm,bodyoffsety=-3cm]{5. Acknowledgements, references and further information}{
  }
   \begin{columns}
  \begin{subcolumns}
